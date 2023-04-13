@@ -197,6 +197,9 @@ export class TokenControl{
                 else if (stats == 'KinAC') {    //starfinder
                     txt += tokenHelper.getKinAC(token);
                 }
+                else if (stats == 'Virtue') {
+                    txt += tokenHelper.getVirtue(token);
+                }
                 else if (stats == 'AC') txt += tokenHelper.getAC(token);
                 else if (stats == 'ShieldHP') txt += tokenHelper.getShieldHP(token);
                 else if (stats == 'Speed') txt += tokenHelper.getSpeed(token);

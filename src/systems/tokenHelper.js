@@ -5,6 +5,7 @@ import { demonlord } from "./demonlord.js";
 import { wfrp4e } from "./wfrp4e.js";
 import { forbiddenlands } from "./forbidden-lands.js";
 import { starfinder } from "./starfinder.js";
+import { helveczia } from "./helveczia.js";
 import { compatibleCore } from "../misc.js";
 import { gamingSystem } from "../../MaterialDeck.js";
 
@@ -22,6 +23,7 @@ export class TokenHelper{
         else if (gamingSystem == 'wfrp4e') this.system = new wfrp4e();
         else if (gamingSystem == 'forbidden-lands') this.system = new forbiddenlands();
         else if (gamingSystem == 'sfrpg') this.system = new starfinder();
+        else if (gamingSystem == 'helveczia') this.system = new helveczia();
         else this.system = new dnd5e();     //default to dnd5e
     }
 
@@ -88,10 +90,12 @@ export class TokenHelper{
         }
         if (game.user.isGM == false && game.paused) return;
         if (game.user.isGM == false && (token.can(game.user,"control") == false || token.checkCollision(token.getCenter(x, y)))) return;
-        let coords = canvas.grid.getCenter(x,y);
-        coords[0] -= canvas.grid.size/2;
-        coords[1] -= canvas.grid.size/2;
-        token.document.update({x:coords[0],y:coords[1]});
+        // What is going on here?!
+        // let coords = canvas.grid.getCenter(x,y);
+        // coords[0] -= canvas.grid.size/2;
+        // coords[1] -= canvas.grid.size/2;
+        // token.document.update({x:coords[0],y:coords[1]});
+        token.document.update({x:x,y:y});
     };
 
     rotateToken(token,move,value) {
@@ -262,6 +266,11 @@ export class TokenHelper{
     getKinAC(token) {
         return this.system.getKinAC(token);
     }
+
+    /* Helveczia */
+    getVirtue(token) {
+        return this.system.getVirtue(token);
+    }
     
 
     /**
@@ -336,7 +345,7 @@ export class TokenHelper{
     /**
      * Ring Colors
      */
-     getSkillRingColor(token,skill) {
+    getSkillRingColor(token,skill) {
         return this.system.getSkillRingColor(token,skill);
     }
     getSaveRingColor(token,save) {

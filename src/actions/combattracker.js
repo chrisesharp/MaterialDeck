@@ -42,7 +42,7 @@ export class CombatTracker{
                 const combatant = initiativeOrder[nr]
 
                 if (combatant != undefined){
-                    const tokenId = combatant.data.tokenId;
+                    const tokenId = combatant.tokenId;
                     tokenControl.pushData(tokenId,settings,context,device,combatantState,'#cccc00');
                     return;
                 }
@@ -62,7 +62,7 @@ export class CombatTracker{
                 return;
             }
             if (combat != null && combat != undefined && combat.started){
-                const tokenId = combat.combatant.data.tokenId;
+                const tokenId = combat.combatant.tokenId;
                 tokenControl.pushData(tokenId,settings,context,device);
             }
             else {
@@ -193,12 +193,12 @@ export class CombatTracker{
                     if (nr == undefined || nr < 1) nr = 0;
                     const combatant = initiativeOrder[nr]
                     if (combatant == undefined) return;
-                    tokenId = combatant.data.tokenId;
+                    tokenId = combatant.tokenId;
                 }
             }
             else if (mode == 'currentCombatant') 
                 if (combat != null && combat != undefined && combat.started)
-                    tokenId = combat.combatant.data.tokenId;
+                    tokenId = combat.combatant.tokenId;
                 
             let token = (canvas.tokens.children[0] != undefined) ? canvas.tokens.children[0].children.find(p => p.id == tokenId) : undefined;
             if (token == undefined) return;

@@ -478,7 +478,7 @@ export class ExternalModules{
         let ring = 0;
         let ringColor = '#000000';
         let txt = '';
-        let currentTime = game.Gametime.DTNow().longDateExtended();
+        let currentTime = SimpleCalendar.api.currentDateTime();
         let clock = 'none';
 
         if (displayTime == 'clock') {
@@ -528,16 +528,16 @@ export class ExternalModules{
 
             if (displayDate == 'textDay') txt += currentTime.dowString + ' ';
             txt += currentTime.day;
-            if (currentTime.day % 10 == 1 && currentTime != 11) txt += game.i18n.localize("MaterialDeck.AboutTime.First");
-            else if (currentTime.day % 10 == 2 && currentTime != 12) txt += game.i18n.localize("MaterialDeck.AboutTime.Second");
-            else if (currentTime.day % 10 == 3 && currentTime != 13) txt += game.i18n.localize("MaterialDeck.AboutTime.Third");
+            if (currentTime.day % 10 == 1 && currentTime.day != 11) txt += game.i18n.localize("MaterialDeck.AboutTime.First");
+            else if (currentTime.day % 10 == 2 && currentTime.day != 12) txt += game.i18n.localize("MaterialDeck.AboutTime.Second");
+            else if (currentTime.day % 10 == 3 && currentTime.day != 13) txt += game.i18n.localize("MaterialDeck.AboutTime.Third");
             else txt += game.i18n.localize("MaterialDeck.AboutTime.Fourth");
             txt += ' ' + game.i18n.localize("MaterialDeck.AboutTime.Of") + ' ' + currentTime.monthString + ', ' + currentTime.year;
         }
 
         if (settings.aboutTimeActive) {
-            const clockRunning = game.Gametime.isRunning();
-            ringColor = clockRunning ? ringOnColor : ringOffColor;
+            const clockRunning = SimpleCalendar.api.clockStatus();
+            ringColor = clockRunning.started ? ringOnColor : ringOffColor;
             ring = 2;
         }
         
@@ -552,14 +552,14 @@ export class ExternalModules{
         const onClick = settings.aboutTimeOnClick ? settings.aboutTimeOnClick : 'none';
         if (onClick == 'none') return;
         else if (onClick == 'startStop') {
-            const clockRunning = game.Gametime.isRunning();
+            const clockRunning = SimpleCalendar.api.clockStatus();
             const startMode = settings.aboutTimeStartStopMode ? settings.aboutTimeStartStopMode : 'toggle';
-            if ((startMode == 'toggle' && clockRunning) || startMode == 'stop') game.Gametime.stopRunning();
-            else if ((startMode == 'toggle' && !clockRunning) || startMode == 'start') game.Gametime.startRunning();
+            if ((startMode == 'toggle' && clockRunning) || startMode == 'stop') game.time.stopRunning();
+            else if ((startMode == 'toggle' && !clockRunning) || startMode == 'start') game.time.startRunning();
         }
         else if (onClick == 'advance') {
             const advanceMode = settings.aboutTimeAdvanceMode ? settings.aboutTimeAdvanceMode : 'dawn';
-            let now = Gametime.DTNow();
+            let now = game.time.worldTime;
             if (advanceMode == 'dawn') {
                 let newDT = now.add({
                     days: now.hours < 7 ? 0 : 1
@@ -568,7 +568,7 @@ export class ExternalModules{
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == 'noon') {
                 let newDT = now.add({
@@ -578,7 +578,7 @@ export class ExternalModules{
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == 'dusk') {
                 let newDT = now.add({
@@ -588,35 +588,35 @@ export class ExternalModules{
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == 'midnight') {
-                let newDT = Gametime.DTNow().add({
+                let newDT = game.time.worldTime.add({
                     days: 1
                 }).setAbsolute({
                     hours: 0,
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == '1s') 
-                game.Gametime.advanceClock(1);
+                game.time.advance(1);
             else if (advanceMode == '30s') 
-                game.Gametime.advanceClock(30);
+                game.time.advance(30);
             
             else if (advanceMode == '1m') 
-                game.Gametime.advanceTime({ minutes: 1 });
+                game.time.advance(60);
             else if (advanceMode == '5m') 
-                game.Gametime.advanceTime({ minutes: 5 });
+                game.time.advance(300);
             else if (advanceMode == '15m') 
-                game.Gametime.advanceTime({ minutes: 15 });
+                game.time.advance(900);
             else if (advanceMode == '1h') 
-                game.Gametime.advanceTime({ hours: 1 });
+                game.time.advance(3600);
         }
         else if (onClick == 'recede') {
             const advanceMode = settings.aboutTimeAdvanceMode ? settings.aboutTimeAdvanceMode : 'dawn';
-            let now = Gametime.DTNow();
+            let now = game.time.worldTime;
             if (advanceMode == 'dawn') {
                 let newDT = now.add({
                     days: now.hours < 7 ? -1 : 0
@@ -625,7 +625,7 @@ export class ExternalModules{
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == 'noon') {
                 let newDT = now.add({
@@ -635,7 +635,7 @@ export class ExternalModules{
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == 'dusk') {
                 let newDT = now.add({
@@ -645,31 +645,31 @@ export class ExternalModules{
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == 'midnight') {
-                let newDT = Gametime.DTNow().add({
+                let newDT = game.time.worldTime.add({
                     days: -1
                 }).setAbsolute({
                     hours: 0,
                     minutes: 0,
                     seconds: 0
                 });
-                Gametime.setAbsolute(newDT);
+                SimpleCalendar.api.setDate(newDT);
             }
             else if (advanceMode == '1s') 
-                game.Gametime.advanceClock(-1);
+                game.time.advance(-1);
             else if (advanceMode == '30s') 
-                game.Gametime.advanceClock(-30);
+                game.time.advance(-30);
             
             else if (advanceMode == '1m') 
-                game.Gametime.advanceTime({ minutes: -1 });
+                game.time.advance(-60);
             else if (advanceMode == '5m') 
-                game.Gametime.advanceTime({ minutes: -5 });
+                game.time.advance(-300);
             else if (advanceMode == '15m') 
-                game.Gametime.advanceTime({ minutes: -15 });
+                game.time.advance(-900);
             else if (advanceMode == '1h') 
-                game.Gametime.advanceTime({ hours: -1 });
+                game.time.advance(-3600);
         }
     }
 
