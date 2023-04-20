@@ -42,5 +42,5 @@
   "manifestPlusVersion": "1.1.0",
   "url": "https://github.com/chrisesharp/MaterialDeck",
   "manifest": "https://raw.githubusercontent.com/chrisesharp/MaterialDeck/Master/module.json",
-  "download": "https://github.com/chrisesharp/MaterialDeck/Master/archive/Master.zip"
+  "download": "https://raw.githubusercontent.com/chrisesharp/MaterialDeck/Master/archive/Master.zip"
 }
